@@ -6,6 +6,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
 import turtle
+import math
 
 
 FONT = ("Verdana", 12)
@@ -15,14 +16,16 @@ filepath = "/home/dominik/Pulpit/data/outputPendulumOrt02.log"
 #filepath = "C:/Users/Dominik/Desktop/outputPendulumOrt02.log"
 
 #reading and processing data
-with open(filepath, "r") as file:
-    data = file.readlines()
-numbers = []
-for line in data:
-    singlel = line.split()
-    singlel = [float(z) for z in singlel]
-    numbers.append(singlel)
-sensorval = np.array(numbers)
+class dataREAD:
+    def __init__(self, filepath):
+        with open(filepath, "r") as file:
+            data = file.readlines()
+        numbers = []
+        for line in data:
+            singlel = line.split()
+            singlel = [float(z) for z in singlel]
+            numbers.append(singlel)
+        sensorval = np.array(numbers)
 
 #window creating class
 class APProot(tk.Tk):
@@ -133,12 +136,60 @@ class Compass(turtle.RawTurtle):
         turtle.RawTurtle.__init__(self, canvas)
         self.screen.bgcolor('black')
         self.pensize(5)
+        self.shape("classic")
         self.color('red')
         self.up()
-        x=150
-        y=150
-        self.setposition(x,y)
+        #draw N
+        self.setpos(-5,125)
+        self.setheading(90.0)
         self.down()
-        
+        self.forward(20)
+        self.goto(5,125)
+        self.forward(20)
+        self.up()
+        #draw E
+        self.setposition(145,10)
+        self.setheading(180.0)
+        self.down()
+        self.forward(10)
+        self.left(90.0)
+        self.forward(10)
+        self.left(90.0)
+        self.forward(10)
+        self.up()
+        self.goto(135,0)
+        self.right(90.0)
+        self.down()
+        self.forward(10)
+        self.left(90.0)
+        self.forward(10)
+        self.up()
+        #draw S
+        self.setposition(5,-130)
+        self.left(90.0)
+        self.down()
+        self.circle(5,180)
+        self.goto(5,-140)
+        self.circle(-5,180)
+        self.up()
+        #draw W
+        self.setposition(-145,10)
+        self.down()
+        self.goto(-140,-10)
+        self.goto(-135,10)
+        self.goto(-130,-10)
+        self.goto(-125,10)
+        self.up()
+        self.home()
+        self.color("green")
+        self.setheading(90.0)
+    def pointer(startingangle, newangle):
+        angle = newangle-startingangle
+        Compass.setheading(angle)
+        Compass.down()
+        Compass.forward(100)
+        Compass.update()
+
 app = APProot()
+Compass.pointer(14.0,78.0)
 app.mainloop()
